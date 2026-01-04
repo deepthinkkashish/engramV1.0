@@ -1,0 +1,7 @@
+{
+  "name": "Engram v1.1",
+  "description": "Make neurons happier with spaced repetition. Capture notes, generate quizzes, and master your studies with AI.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

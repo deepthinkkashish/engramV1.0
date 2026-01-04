@@ -1,0 +1,26 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["@/*"],
+            "message": "Do not use @/ alias imports. Use relative paths (./ ../) in this project."
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "browser": true,
+    "es2022": true
+  }
+}

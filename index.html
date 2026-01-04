@@ -1,0 +1,179 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <base href="./" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#f59e0b" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Make neurons happier with spaced repetition. Capture notes, generate quizzes, and master your studies with AI." />
+    
+    <!-- Google Site Verification -->
+    <meta name="google-site-verification" content="X0JWJUR8qBEUU5vkhZS-F5RKUgrafvYWf7pZSlDxPPs" />
+
+    <title>Engram - AI Study Companion</title>
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+    
+    <!-- Google AdSense Auto Ads -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1930133918087114" crossorigin="anonymous"></script>
+
+    <style>
+      html, body, #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      
+      /* Subtle Custom Scrollbar */
+      .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0,0,0,0.2) transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: rgba(0,0,0,0.2);
+        border-radius: 4px;
+      }
+      .dark .custom-scrollbar {
+        scrollbar-color: rgba(255,255,255,0.2) transparent;
+      }
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: rgba(255,255,255,0.2);
+      }
+
+      /* Task Chip Delete Button */
+      .task-delete-btn {
+        width: 28px; height: 28px;
+        min-width: 28px; min-height: 28px;
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 9999px;
+        color: #6b7280; /* gray-500 */
+        background: rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.08);
+        position: relative; z-index: 5;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        margin-left: 6px;
+      }
+      .dark .task-delete-btn {
+        color: #d1d5db; /* gray-300 */
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.1);
+      }
+      .task-delete-btn:hover {
+        background: #fee2e2; /* red-100 */
+        color: #ef4444; /* red-500 */
+        border-color: #fca5a5; /* red-300 */
+      }
+      .dark .task-delete-btn:hover {
+        background: rgba(127, 29, 29, 0.4);
+        color: #fca5a5;
+        border-color: #7f1d1d;
+      }
+      .task-delete-btn:active {
+        transform: scale(0.95);
+        opacity: 0.9;
+      }
+      .task-delete-btn:focus-visible {
+        outline: 2px solid #3b82f6;
+        outline-offset: 2px;
+      }
+
+      /* Text Wrapping Helper */
+      .overflow-wrap-anywhere {
+        overflow-wrap: anywhere;
+        word-wrap: break-word;
+        word-break: break-word;
+        hyphens: auto;
+      }
+    </style>
+    <script>
+      // Runtime Shim for Vercel/Static hosting
+      // This prevents "ReferenceError: process is not defined" when code references process.env
+      window.process = { env: {} };
+      
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              handwriting: ['Caveat', 'cursive'],
+            }
+          },
+        }
+      }
+    </script>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react-dom/client": "https://esm.sh/react-dom@^19.2.3/client",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.561.0",
+    "pdfjs-dist": "https://esm.sh/pdfjs-dist@3.11.174",
+    "katex": "https://esm.sh/katex@0.16.9",
+    "dompurify": "https://esm.sh/dompurify@3.0.9",
+    "wouter": "https://esm.sh/wouter@3.3.1",
+    "react-window": "https://esm.sh/react-window@1.8.10",
+    "react-virtualized-auto-sizer": "https://esm.sh/react-virtualized-auto-sizer@1.0.24",
+    "react-markdown": "https://esm.sh/react-markdown@9.0.1?bundle",
+    "remark-math": "https://esm.sh/remark-math@6.0.0?bundle",
+    "remark-gfm": "https://esm.sh/remark-gfm@4.0.0?bundle",
+    "rehype-katex": "https://esm.sh/rehype-katex@7.0.0?bundle",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.39.7"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200 overscroll-none">
+    <div id="root"></div>
+    
+    <!-- App Entry Point -->
+    <script type="module" src="./index.tsx"></script>
+
+    <script>
+      const hostname = window.location.hostname;
+      const isPreview = hostname.includes('googleusercontent.com') || 
+                        hostname.includes('scusercontent.goog') || 
+                        hostname.includes('ai.studio') ||
+                        hostname.includes('aistudio.google.com');
+      
+      const isHttps = window.location.protocol === 'https:' || hostname === 'localhost';
+      const shouldRegister = 'serviceWorker' in navigator && !isPreview && isHttps;
+
+      console.log(`[SW] mode: ${shouldRegister ? 'Enabled' : 'Disabled (Preview/HTTP)'}`);
+
+      if (shouldRegister) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(registration => {
+              console.log('SW registered:', registration.scope);
+            })
+            .catch(error => {
+              console.log('SW registration failed:', error);
+            });
+        });
+      }
+    </script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
